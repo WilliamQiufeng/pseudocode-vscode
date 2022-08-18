@@ -1,0 +1,174 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "PseudoCode",
+    "patterns": [{
+            "include": "#keywords"
+        },
+        {
+            "include": "#io_keywords"
+        },
+        {
+            "include": "#modifiers"
+        },
+        {
+            "include": "#strings"
+        },
+        {
+            "include": "#dates"
+        },
+        {
+            "include": "#numbers"
+        },
+        {
+            "include": "#comments"
+        },
+        {
+            "include": "#constants"
+        },
+        {
+            "include": "#logic_ops"
+        },
+        {
+            "include": "#arith_ops"
+        },
+        {
+            "include": "#builtin_types"
+        },
+        {
+            "include": "#special_variables"
+        },
+        {
+            "include": "#variables"
+        }
+    ],
+    "repository": {
+        "numbers": {
+            "patterns": [{
+                    "name": "constant.numeric.float.pseudocode",
+                    "match": "([0-9]+(_?))*(\\.)([0-9]+)|([0-9]+(_?))+(\\.)"
+                },
+                {
+                    "name": "constant.numeric.integer.pseudocode",
+                    "match": "(?:(?:[0-9]+)(?:[_]?))+"
+                }
+            ]
+        },
+        "dates": {
+            "patterns": [{
+                "name": "constant.numeric.pseudocode",
+                "match": "[0-9]{2}/[0-9]{2}/[0-9]{4}"
+            }]
+        },
+        "keywords": {
+            "patterns": [{
+                "name": "keyword.control.pseudocode",
+                "match": "\\b(DECLARE|CONSTANT|IF|THEN|ELSE|ENDIF|WHILE|DO|ENDWHILE|FOR|TO|NEXT|STEP|CASE|OF|OTHERWISE|ENDCASE|REPEAT|UNTIL|PROCEDURE|ENDPROCEDURE|FUNCTION|ENDFUNCTION|RETURN|RETURNS|CALL|TYPE|ENDTYPE|CLASS|ENDCLASS|NEW)\\b"
+            }]
+        },
+        "io_keywords": {
+            "patterns": [{
+                "name": "keyword.other.pseudocode",
+                "match": "\\b(OUTPUT|INPUT|OPENFILE|READFILE|WRITEFILE|CLOSEFILE|SEEK|PUTRECORD|GETRECORD|READ|WRITE|APPEND|RANDOM)\\b"
+            }]
+        },
+        "modifiers": {
+            "patterns": [{
+                "name": "storage.modifier.pseudocode",
+                "match": "\\b(PUBLIC|PRIVATE|BYVAL|BYREF)\\b"
+            }]
+        },
+        "functions": {
+            "name": "keyword.declaration.function.pseudocode",
+            "match": "\\b(FUNCTION|PROCEDURE)\\b"
+        },
+        "classes": {
+            "name": "keyword.declaration.class.pseudocode",
+            "match": "\\b(TYPE|CLASS)\\b"
+        },
+        "comments": {
+            "patterns": [{
+                "name": "comment.line.double-slash.v",
+                "begin": "//",
+                "beginCaptures": {
+                    "0": {
+                        "name": "punctuation.definition.comment.begin.pseudocode"
+                    }
+                },
+                "end": "$"
+            }]
+        },
+        "constants": {
+            "name": "constant.language.pseudocode",
+            "match": "\\b(TRUE|FALSE)\\b"
+        },
+        "logic_ops": {
+            "name": "keyword.boolean.pseudocode",
+            "match": "\\b(AND|OR|NOT|<|>|<=|>=|=|<>)\\b"
+        },
+        "arith_ops": {
+            "name": "keyword.operator.arithmetic.pseudocode",
+            "match": "\\b(\\+|\\-|\\*|\\/|DIV|MOD|<-)\\b"
+        },
+        "builtin_types": {
+            "name": "storage.type.concrete.pseudocode",
+            "match": "\\b(INTEGER|REAL|BOOLEAN|CHAR|DATE|STRING|ARRAY)\\b"
+        },
+        "parameter": {
+            "name": "variable.parameter.pseudocode",
+            "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*\\b"
+        },
+        "variables": {
+            "name": "variable.pseudocode",
+            "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*\\b"
+        },
+        "custom_types": {
+            "name": "storage.type",
+            "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*\\b"
+        },
+        "special_variables": {
+            "name": "variable.language.pseudocode",
+            "match": "\\b(SUPER)\\b"
+        },
+        "strings": {
+            "patterns": [{
+                    "begin": "\"",
+                    "end": "\"",
+                    "name": "string.quoted.rune.pseudocode",
+                    "patterns": [{
+                        "include": "#string-escaped-char"
+                    }]
+                },
+                {
+                    "begin": "'",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "storage.type.string.pseudocode"
+                        }
+                    },
+                    "end": "'",
+                    "name": "string.quoted.single.pseudocode",
+                    "patterns": [{
+                            "include": "#string-escaped-char"
+                        },
+                        {
+                            "match": "([^']{2,})",
+                            "name": "invalid.illegal.character.pseudocode"
+                        }
+                    ]
+                }
+            ]
+        },
+        "string-escaped-char": {
+            "patterns": [{
+                    "name": "constant.character.escape.pseudocode",
+                    "match": "\\\\([0-7]{3}|[\\$abfnrtv\\\\'\"]|x[0-9a-fA-F]{2}|u[0-9a-fA-F]{4}|U[0-9a-fA-F]{8})"
+                },
+                {
+                    "name": "invalid.illegal.unknown-escape.pseudocode",
+                    "match": "\\\\[^0-7\\$xuUabfnrtv\\'\"]"
+                }
+            ]
+        }
+    },
+    "scopeName": "source.pseudo"
+}
