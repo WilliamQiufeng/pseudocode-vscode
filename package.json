@@ -1,9 +1,9 @@
 {
-    "name": "pseudocode",
+    "name": "caie-pseudocode",
     "description": "VSCode part of a language server",
     "author": "WilliamQiufeng",
     "license": "MIT",
-    "version": "0.0.1",
+    "version": "1.1.4",
     "publisher": "WilliamQiufeng",
     "engines": {
         "vscode": "^1.66.0"
@@ -17,23 +17,17 @@
     "main": "./out/src/extension",
     "contributes": {
         "configuration": {
-            "type": "object",
-            "title": "Example configuration",
+            "title": "PseudoCode",
             "properties": {
-                "languageServerExample.maxNumberOfProblems": {
-                    "type": "number",
-                    "default": 100,
-                    "description": "Controls the maximum number of problems produced by the server."
+                "pseudocode.runtime.printOperations": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Prints the operations generated from the source file before execution"
                 },
-                "languageServerExample.trace.server": {
-                    "type": "string",
-                    "enum": [
-                        "off",
-                        "messages",
-                        "verbose"
-                    ],
-                    "default": "verbose",
-                    "description": "Traces the communication between VSCode and the languageServerExample service."
+                "pseudocode.runtime.strictVariables": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Disallow assignment of a variable before declaration"
                 }
             }
         },
@@ -62,12 +56,20 @@
             "type": "pseudocode"
         }],
         "keybindings": [{
-            "command": "workbench.action.tasks.runTask",
-            "args": "PseudoCode: run",
-            "key": "f5",
-            "mac": "f5",
-            "when": "editorTextFocus && resourceLangId == pseudocode"
-        }]
+                "command": "workbench.action.tasks.runTask",
+                "args": "PseudoCode: run",
+                "key": "f5",
+                "mac": "f5",
+                "when": "resourceLangId == pseudocode"
+            },
+            {
+                "command": "workbench.action.tasks.runTask",
+                "args": "PseudoCode: update",
+                "key": "f8",
+                "mac": "f8",
+                "when": "resourceLangId == pseudocode"
+            }
+        ]
     },
     "scripts": {
         "compile": "tsc -p ./",
@@ -109,5 +111,9 @@
     "dependencies": {
         "vscode-languageclient": "^7.0.0-next.8",
         "vscode-languageserver-protocol": "^3.16.0-next.6"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/QiuFeng54321/pseudocode-vscode.git"
     }
 }
