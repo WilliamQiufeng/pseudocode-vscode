@@ -3,19 +3,16 @@
     "version": "0.1.0",
     "configurations": [
         {
-            "name": "Launch Extension",
-            "type": "extensionHost",
-            "request": "launch",
-            "runtimeExecutable": "${execPath}",
             "args": [
-                "--disable-extensions",
-                "--enable-proposed-api",
-                "--extensionDevelopmentPath=${workspaceRoot}"
+                "--extensionDevelopmentPath=${workspaceFolder}"
             ],
-            "stopOnEntry": false,
-            "sourceMaps": true,
-            "outFiles": ["${workspaceRoot}/out/src/**/*.js"],
-            "preLaunchTask": "npm"
+            "name": "Launch Extension",
+            "outFiles": [
+                "${workspaceFolder}/out/**/*.js"
+            ],
+            "preLaunchTask": "npm",
+            "request": "launch",
+            "type": "extensionHost"
         },
         {
             "name": "Launch Tests",

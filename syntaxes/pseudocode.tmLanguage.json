@@ -111,7 +111,7 @@
         },
         "builtin_types": {
             "name": "storage.type.concrete.pseudocode",
-            "match": "\\b(INTEGER|REAL|BOOLEAN|CHAR|DATE|STRING|ARRAY)\\b"
+            "match": "\\b(INTEGER|REAL|BOOLEAN|CHAR|DATE|STRING|ARRAY|SET)\\b"
         },
         "parameter": {
             "name": "variable.parameter.pseudocode",

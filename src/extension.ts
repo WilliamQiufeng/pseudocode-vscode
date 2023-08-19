@@ -19,13 +19,15 @@ import {
     createServerPipeTransport,
 } from "vscode-languageclient/node";
 import { Trace, createClientPipeTransport } from "vscode-jsonrpc/node";
+import { CodeManager } from "./runner";
 
-const debugMode = true;
+const debugMode = false;
 const LSPPath = debugMode ? 'dotnet' : 'PseudoCode.LSP'
 const LSPArgs = debugMode ? ["/Users/mac/RiderProjects/PseudoCode/PseudoCode.LSP/bin/Debug/net6.0/PseudoCode.LSP.dll"] : []
 const CliCmd = debugMode ? "dotnet" : "PseudoCode.Cli"
 const CliArgs = debugMode ? ["/Users/mac/RiderProjects/PseudoCode/PseudoCode.Cli/bin/Debug/net6.0/PseudoCode.Cli.dll"] : []
 
+const runner = new CodeManager();
 
 function getArguments() {
     var CliAdditionalArgs: string[] = [];
@@ -41,16 +43,16 @@ function getArguments() {
 export function activate(context: ExtensionContext) {
     // The server is implemented in node
     console.log("hi")
-    const lspPath =
-        vscode.tasks.registerTaskProvider('pseudocode', {
-            provideTasks: () => {
-                return getTasks();
-            },
-            resolveTask(_task: vscode.Task): vscode.Task | undefined {
-                // as far as I can see from the documentation this just needs to return undefined.
-                return undefined;
-            }
-        });
+    // const lspPath =
+    //     vscode.tasks.registerTaskProvider('pseudocode', {
+    //         provideTasks: () => {
+    //             return getTasks();
+    //         },
+    //         resolveTask(_task: vscode.Task): vscode.Task | undefined {
+    //             // as far as I can see from the documentation this just needs to return undefined.
+    //             return undefined;
+    //         }
+    //     });
     let serverExe = LSPPath;
 
     // let serverExe = "D:\\Development\\Omnisharp\\csharp-language-server-protocol\\sample\\SampleServer\\bin\\Debug\\netcoreapp2.0\\win7-x64\\SampleServer.exe";
@@ -104,8 +106,33 @@ export function activate(context: ExtensionContext) {
     // Push the disposable to the context's subscriptions so that the
     // client can be deactivated on extension deactivation
     context.subscriptions.push(disposable);
+
+    registerRun(context)
+    registerUpdate(context)
+
 }
 
+function registerRun(context: ExtensionContext) {
+    const command = 'caie-pseudocode.run';
+    const commandHandler = (fileUri: vscode.Uri) => {
+        runner.getCurrentFile(fileUri).then(doc => {
+            runner.executeCommandInTerminal(`cd \"\${fileDirname}\"\n${CliCmd} ${getArguments().join(" ")} \"${doc.fileName}\"`)
+            
+        })
+        
+    };
+
+    context.subscriptions.push(vscode.commands.registerCommand(command, commandHandler));
+}
+function registerUpdate(context: ExtensionContext) {
+
+    const command = 'caie-pseudocode.update';
+    const commandHandler = () => {
+        runner.executeCommandInTerminal(`PseudoCode.Update`)
+    };
+
+    context.subscriptions.push(vscode.commands.registerCommand(command, commandHandler));
+}
 
 function getTasks() {
     const workspaceFolders = vscode.workspace.workspaceFolders;
@@ -126,7 +153,7 @@ function getTasks() {
         const runTask = new vscode.Task(
             runTaskKind, workspaceFolder, runTaskName, 'PseudoCode',
             new vscode.ShellExecution(
-                `cd \"\${fileDirname}\" && ${CliCmd} ${getArguments().join(" ")} \"\${file}\"`,
+                `cd \"\${fileDirname}\"\n${CliCmd} ${getArguments().join(" ")} \"\${file}\"`
             ));
         const updateTaskName = "update"
         const updateTaskKind: PseudoCodeTaskDefinition = {

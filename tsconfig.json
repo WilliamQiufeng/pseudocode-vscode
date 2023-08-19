@@ -18,7 +18,6 @@
 		"noImplicitThis": true,
 		"inlineSourceMap": false,
 		"preserveConstEnums": true,
-		"strictNullChecks": true,
 		"noUnusedParameters": false,
 		"skipLibCheck": true
 	},
