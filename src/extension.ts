@@ -43,16 +43,6 @@ function getArguments() {
 export function activate(context: ExtensionContext) {
     // The server is implemented in node
     console.log("hi")
-    // const lspPath =
-    //     vscode.tasks.registerTaskProvider('pseudocode', {
-    //         provideTasks: () => {
-    //             return getTasks();
-    //         },
-    //         resolveTask(_task: vscode.Task): vscode.Task | undefined {
-    //             // as far as I can see from the documentation this just needs to return undefined.
-    //             return undefined;
-    //         }
-    //     });
     let serverExe = LSPPath;
 
     // let serverExe = "D:\\Development\\Omnisharp\\csharp-language-server-protocol\\sample\\SampleServer\\bin\\Debug\\netcoreapp2.0\\win7-x64\\SampleServer.exe";
@@ -117,7 +107,6 @@ function registerRun(context: ExtensionContext) {
     const commandHandler = (fileUri: vscode.Uri) => {
         runner.getCurrentFile(fileUri).then(doc => {
             runner.executeCommandInTerminal(`cd \"\${fileDirname}\"\n${CliCmd} ${getArguments().join(" ")} \"${doc.fileName}\"`)
-            
         })
         
     };
@@ -132,49 +121,4 @@ function registerUpdate(context: ExtensionContext) {
     };
 
     context.subscriptions.push(vscode.commands.registerCommand(command, commandHandler));
-}
-
-function getTasks() {
-    const workspaceFolders = vscode.workspace.workspaceFolders;
-    const result: vscode.Task[] = [];
-    if (!workspaceFolders || workspaceFolders.length === 0) {
-        return result;
-    }
-    for (const workspaceFolder of workspaceFolders) {
-        const folderString = workspaceFolder.uri.fsPath;
-        if (!folderString) {
-            continue;
-        }
-        const runTaskName = "run";
-        const runTaskKind: PseudoCodeTaskDefinition = {
-            type: 'pseudocode',
-            task: runTaskName
-        };
-        const runTask = new vscode.Task(
-            runTaskKind, workspaceFolder, runTaskName, 'PseudoCode',
-            new vscode.ShellExecution(
-                `cd \"\${fileDirname}\"\n${CliCmd} ${getArguments().join(" ")} \"\${file}\"`
-            ));
-        const updateTaskName = "update"
-        const updateTaskKind: PseudoCodeTaskDefinition = {
-            type: 'pseudocode',
-            task: updateTaskName
-        };
-        const updateTask = new vscode.Task(
-            updateTaskKind, workspaceFolder, updateTaskName, 'PseudoCode',
-            new vscode.ShellExecution(
-                `PseudoCode.Update`
-            )
-        );
-        console.log(folderString)
-        result.push(runTask);
-        result.push(updateTask)
-    }
-    return result;
-}
-interface PseudoCodeTaskDefinition extends vscode.TaskDefinition {
-    /**
-     * The task name
-     */
-    task: string;
 }
