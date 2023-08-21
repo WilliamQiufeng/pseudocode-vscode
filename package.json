@@ -3,7 +3,7 @@
     "description": "VSCode part of a language server",
     "author": "WilliamQiufeng",
     "license": "MIT",
-    "version": "1.1.7",
+    "version": "1.1.8",
     "publisher": "WilliamQiufeng",
     "engines": {
         "vscode": "^1.52.0"
@@ -77,7 +77,6 @@
                 "command": "caie-pseudocode.run",
                 "key": "f5",
                 "mac": "f5",
-                "args": "${file}",
                 "when": "resourceLangId == pseudocode"
             },
             {
@@ -92,7 +91,7 @@
                 {
                     "command": "caie-pseudocode.run",
                     "group": "navigation",
-                    "when": "true"
+                    "when": "resourceLangId == pseudocode"
                 }
             ]
         }

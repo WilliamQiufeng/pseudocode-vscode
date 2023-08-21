@@ -155,5 +155,6 @@ export class CodeManager implements vscode.Disposable {
             isNewTerminal = true;
         }
         this._terminal.sendText(command);
+        this._terminal.show(false);
     }
 }
