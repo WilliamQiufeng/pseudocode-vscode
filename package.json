@@ -7,11 +7,12 @@
     "version": "1.1.8",
     "publisher": "WilliamQiufeng",
     "engines": {
-        "vscode": "^1.52.0"
+        "vscode": "^1.66.0"
     },
     "categories": [
         "Programming Languages"
     ],
+    "activationEvents": [],
     "main": "./out/src/extension",
     "contributes": {
         "configuration": {

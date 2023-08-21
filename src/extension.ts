@@ -106,7 +106,7 @@ function registerRun(context: ExtensionContext) {
     const command = 'caie-pseudocode.run';
     const commandHandler = (fileUri: vscode.Uri) => {
         runner.getCurrentFile(fileUri).then(doc => {
-            runner.executeCommandInTerminal(`cd \"\${fileDirname}\"\n${CliCmd} ${getArguments().join(" ")} \"${doc.fileName}\"`)
+            runner.executeCommandInTerminal(`cd \"${path.dirname(doc.fileName)}\"\n${CliCmd} ${getArguments().join(" ")} \"${doc.fileName}\"`)
         })
         
     };
