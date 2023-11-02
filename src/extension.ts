@@ -7,7 +7,7 @@
 import * as path from "path";
 
 import * as vscode from 'vscode';
-import { workspace, Disposable, ExtensionContext } from 'vscode';
+import { workspace, Disposable, ExtensionContext, window } from 'vscode';
 import {
     LanguageClient,
     LanguageClientOptions,
@@ -21,13 +21,14 @@ import {
 import { Trace, createClientPipeTransport } from "vscode-jsonrpc/node";
 import { CodeManager } from "./runner";
 
-const debugMode = false;
+const debugMode = true;
 const LSPPath = debugMode ? 'dotnet' : 'PseudoCode.LSP'
 const LSPArgs = debugMode ? ["/Users/mac/RiderProjects/PseudoCode/PseudoCode.LSP/bin/Debug/net6.0/PseudoCode.LSP.dll"] : []
 const CliCmd = debugMode ? "dotnet" : "PseudoCode.Cli"
 const CliArgs = debugMode ? ["/Users/mac/RiderProjects/PseudoCode/PseudoCode.Cli/bin/Debug/net6.0/PseudoCode.Cli.dll"] : []
 
 const runner = new CodeManager();
+let client: LanguageClient;
 
 function getArguments() {
     var CliAdditionalArgs: string[] = [];
@@ -42,9 +43,10 @@ function getArguments() {
 }
 export function activate(context: ExtensionContext) {
     // The server is implemented in node
-    console.log("hi")
+    console.log(`hi ${LSPPath} ${LSPArgs}`);
     let serverExe = LSPPath;
 
+    const serverChannel = window.createOutputChannel("Pseudocode Language Server");
     // let serverExe = "D:\\Development\\Omnisharp\\csharp-language-server-protocol\\sample\\SampleServer\\bin\\Debug\\netcoreapp2.0\\win7-x64\\SampleServer.exe";
     // let serverExe = "D:/Development/Omnisharp/omnisharp-roslyn/artifacts/publish/OmniSharp.Stdio.Driver/win7-x64/OmniSharp.exe";
     // The debug options for the server
@@ -54,52 +56,41 @@ export function activate(context: ExtensionContext) {
     // Otherwise the run options are used
     let serverOptions: ServerOptions = {
         // run: { command: serverExe, args: ['-lsp', '-d'] },
-        run: {
-            command: serverExe,
-            args: LSPArgs,
-            transport: TransportKind.pipe,
-        },
-        // debug: { command: serverExe, args: ['-lsp', '-d'] }
-        debug: {
-            command: serverExe,
-            args: LSPArgs,
-            transport: TransportKind.pipe,
-            runtime: "",
-        },
+        command: serverExe,
+        args: LSPArgs,
+        transport: TransportKind.stdio,
     };
 
     // Options to control the language client
     let clientOptions: LanguageClientOptions = {
+        outputChannel: serverChannel,
         // Register the server for plain text documents
-        documentSelector: [
-            {
-                pattern: "**/*.pseudo",
-            },
-            {
-                pattern: "**/*.p",
-            },
+        documentSelector: [{
+            scheme: 'file',
+            language: 'caie-pseudocode'
+        }
         ],
         progressOnInitialization: true,
         synchronize: {
+
             // Synchronize the setting section 'languageServerExample' to the server
-            configurationSection: "pseudocode",
-            fileEvents: workspace.createFileSystemWatcher("**/*.pseudo"),
+            configurationSection: "caie-pseudocode",
+            fileEvents: [
+                workspace.createFileSystemWatcher("**/*.pseudo"),
+                workspace.createFileSystemWatcher("**/*.p"),
+            ],
         },
     };
 
     // Create the language client and start the client.
-    const client = new LanguageClient("pseudocode", "PseudoCode Language Client", serverOptions, clientOptions);
+    client = new LanguageClient("caie-pseudocode", "PseudoCode Language Client", serverOptions, clientOptions);
     client.registerProposedFeatures();
-    client.trace = Trace.Verbose;
-    let disposable = client.start();
+    client.setTrace(Trace.Verbose);
+    client.start();
 
-    // Push the disposable to the context's subscriptions so that the
-    // client can be deactivated on extension deactivation
-    context.subscriptions.push(disposable);
 
     registerRun(context)
     registerUpdate(context)
-
 }
 
 function registerRun(context: ExtensionContext) {
@@ -108,7 +99,7 @@ function registerRun(context: ExtensionContext) {
         runner.getCurrentFile(fileUri).then(doc => {
             runner.executeCommandInTerminal(`cd \"${path.dirname(doc.fileName)}\"\n${CliCmd} ${getArguments().join(" ")} \"${doc.fileName}\"`)
         })
-        
+
     };
 
     context.subscriptions.push(vscode.commands.registerCommand(command, commandHandler));
@@ -121,4 +112,10 @@ function registerUpdate(context: ExtensionContext) {
     };
 
     context.subscriptions.push(vscode.commands.registerCommand(command, commandHandler));
+}
+export function deactivate(): Thenable<void> | undefined {
+    if (!client) {
+        return undefined;
+    }
+    return client.stop();
 }

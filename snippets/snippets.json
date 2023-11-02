@@ -70,7 +70,16 @@
         "body": [
             "DECLARE ${1:identifier} : ARRAY[${3:dimensions}] OF ${2:type}"
         ],
-        "description": "Declare an arary."
+        "description": "Declare an array."
+    },
+    "Declare Set": {
+        "prefix": [
+            "DECLARESET"
+        ],
+        "body": [
+            "DECLARE ${1:identifier} : SET OF ${2:type}"
+        ],
+        "description": "Declare an set."
     }
 
 }

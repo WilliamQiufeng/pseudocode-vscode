@@ -7,7 +7,7 @@
     "version": "1.1.8",
     "publisher": "WilliamQiufeng",
     "engines": {
-        "vscode": "^1.66.0"
+        "vscode": "^1.81.0"
     },
     "categories": [
         "Programming Languages"
@@ -18,12 +18,12 @@
         "configuration": {
             "title": "PseudoCode",
             "properties": {
-                "pseudocode.runtime.printOperations": {
+                "caie-pseudocode.runtime.printOperations": {
                     "type": "boolean",
                     "default": false,
                     "description": "Prints the operations generated from the source file before execution"
                 },
-                "pseudocode.runtime.strictVariables": {
+                "caie-pseudocode.runtime.strictVariables": {
                     "type": "boolean",
                     "default": true,
                     "description": "Disallow assignment of a variable before declaration"
@@ -32,10 +32,10 @@
         },
         "languages": [
             {
-                "id": "pseudocode",
+                "id": "caie-pseudocode",
                 "aliases": [
                     "PseudoCode",
-                    "pseudo-code"
+                    "pseudocode"
                 ],
                 "extensions": [
                     ".pseudo",
@@ -46,20 +46,15 @@
         ],
         "grammars": [
             {
-                "language": "pseudocode",
+                "language": "caie-pseudocode",
                 "scopeName": "source.pseudo",
                 "path": "./syntaxes/pseudocode.tmLanguage.json"
             }
         ],
         "snippets": [
             {
-                "language": "pseudocode",
+                "language": "caie-pseudocode",
                 "path": "./snippets/snippets.json"
-            }
-        ],
-        "taskDefinitions": [
-            {
-                "type": "pseudocode"
             }
         ],
         "commands": [
@@ -79,13 +74,13 @@
                 "command": "caie-pseudocode.run",
                 "key": "f5",
                 "mac": "f5",
-                "when": "resourceLangId == pseudocode"
+                "when": "resourceLangId == caie-pseudocode"
             },
             {
                 "command": "caie-pseudocode.update",
                 "key": "f8",
                 "mac": "f8",
-                "when": "resourceLangId == pseudocode"
+                "when": "resourceLangId == caie-pseudocode"
             }
         ],
         "menus": {
@@ -93,7 +88,7 @@
                 {
                     "command": "caie-pseudocode.run",
                     "group": "navigation",
-                    "when": "resourceLangId == pseudocode"
+                    "when": "resourceLangId == caie-pseudocode"
                 }
             ]
         }
@@ -117,7 +112,7 @@
         "@types/glob": "^7.2.0",
         "@types/mocha": "^9.1.0",
         "@types/node": "^14.14.37",
-        "@types/vscode": "^1.66.0",
+        "@types/vscode": "^1.81.0",
         "@typescript-eslint/eslint-plugin": "^5.17.0",
         "@typescript-eslint/parser": "^5.17.0",
         "@vscode/debugadapter": "^1.55.1",
@@ -137,8 +132,8 @@
         "vsce": "^2.7.0"
     },
     "dependencies": {
-        "vscode-languageclient": "^7.0.0-next.8",
-        "vscode-languageserver-protocol": "^3.16.0-next.6"
+        "vscode-languageclient": "^8.1.0",
+        "vscode-languageserver-protocol": "^3.17.3"
     },
     "repository": {
         "type": "git",
